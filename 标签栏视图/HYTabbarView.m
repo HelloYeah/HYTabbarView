@@ -186,11 +186,9 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     UICollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HYCollectionViewCell" forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor orangeColor];
+    cell.backgroundColor = [UIColor greenColor];
     if (indexPath.row % 2) {
-        cell.backgroundColor = [UIColor greenColor
-                                
-                                ];
+        cell.backgroundColor = [UIColor orangeColor];
     }
     
     return cell;
@@ -237,7 +235,7 @@
 
     [btn setTitle:title forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [btn setTitleColor:[UIColor redColor] forState:UIControlStateDisabled];
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
     [self.titles addObject:btn];
 }
 @end
