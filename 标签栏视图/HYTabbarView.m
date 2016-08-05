@@ -1,6 +1,6 @@
 //
 //  HYTabbarView.m
-//  标签栏视图
+//  标签栏视图-多视图滑动点击切换
 //
 //  Created by Sekorm on 16/3/31.
 //  Copyright © 2016年 HY. All rights reserved.
@@ -11,7 +11,7 @@
 #import "HYTabbarView.h"
 
 #define HYTabbarViewHeight 49    //顶部标签条的高度
-#define HYColumn 5      //一屏幕宽至多显示5个标题
+#define HYColumn 5      //一屏幕宽显示5个标题
 #define HYContentViewHeight (self.bounds.size.height - HYTabbarViewHeight)
 #define HYScreenW [UIScreen mainScreen].bounds.size.width
 
