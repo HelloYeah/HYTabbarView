@@ -16,36 +16,30 @@
 
 @implementation ViewController
 
+- (void)viewDidLoad {
+    
+    [super viewDidLoad];
+    
+    [self.view addSubview:self.tabbarView];
+}
+
 //懒加载
 - (HYTabbarView *)tabbarView{
-
+    
     if (!_tabbarView) {
         _tabbarView = ({
             
-            HYTabbarView * tabbar = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 30, [UIScreen mainScreen].bounds.size.width, 600)];
-            [tabbar addSubItemWithViewController:@"UIViewController" title:@"第一个"];
-            [tabbar addSubItemWithViewController:@"UIViewController" title:@"第二个"];
-            [tabbar addSubItemWithViewController:@"UIViewController" title:@"第三个"];
-            [tabbar addSubItemWithViewController:@"UIViewController" title:@"第四个"];
-            [tabbar addSubItemWithViewController:@"UIViewController" title:@"第五个"];
-            [tabbar addSubItemWithViewController:@"UIViewController" title:@"第六个"];
-            [tabbar addSubItemWithViewController:@"UIViewController" title:@"第七个"];
-            [tabbar addSubItemWithViewController:@"UIViewController" title:@"第八个"];
-            [tabbar addSubItemWithViewController:@"UIViewController" title:@"第九个"];
-            [tabbar addSubItemWithViewController:@"UIViewController" title:@"第十个"];
+            HYTabbarView * tabbar = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 30, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+            
+            for (NSInteger i = 0; i< 10; i ++) {
+                UIViewController * vc = [[UIViewController alloc]init];
+                vc.title = [NSString stringWithFormat:@"第%ld个",i+1];
+                [tabbar addSubItemWithViewController:vc];
+            }
             tabbar;
         });
     }
     return _tabbarView;
 }
-
-- (void)viewDidLoad {
-    
-    [super viewDidLoad];
-
-    [self.view addSubview:self.tabbarView];
-}
-
-
 
 @end

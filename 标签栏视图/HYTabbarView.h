@@ -11,11 +11,8 @@
 @interface HYTabbarView : UIView
 
 /**
- *  添加一个条目
- *
- *  @param viewController 把这个控制器的view添加到HYTabbarView中
- *  @param title          对应的标题
+ *  添加一个子控制器
  */
-- (void)addSubItemWithViewController:(NSString *)viewController title:(NSString *)title;
+- (void)addSubItemWithViewController:(UIViewController *)viewController;
 
 @end

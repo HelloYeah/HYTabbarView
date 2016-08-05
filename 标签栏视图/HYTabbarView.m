@@ -10,9 +10,9 @@
 
 #import "HYTabbarView.h"
 
-#define HYTabbarViewHeight 49
+#define HYTabbarViewHeight 49    //顶部标签条的高度
+#define HYColumn 5      //一屏幕宽至多显示5个标题
 #define HYContentViewHeight (self.bounds.size.height - HYTabbarViewHeight)
-#define HYColumn 5
 #define HYScreenW [UIScreen mainScreen].bounds.size.width
 
 @interface HYTabbarView () <UICollectionViewDataSource,UICollectionViewDelegate>
@@ -69,7 +69,7 @@
     tabbar.showsVerticalScrollIndicator = NO;
     tabbar.bounces = NO;
     self.tabbar = tabbar;
-
+    
     UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
     //设置layout 属性
     layout.itemSize = (CGSize){self.bounds.size.width,HYContentViewHeight};
@@ -89,7 +89,7 @@
     
     //注册cell
     [contentView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"HYCollectionViewCell"];
-    [self addObserver:self forKeyPath:@"selectedIndex" options:NSKeyValueObservingOptionOld |NSKeyValueObservingOptionNew context:@"test"];
+    [self addObserver:self forKeyPath:@"selectedIndex" options:NSKeyValueObservingOptionOld |NSKeyValueObservingOptionNew context:@"scrollToNextItem"];
 }
 
 //布局子控件
@@ -113,8 +113,7 @@
         UIButton * btn = self.tabbar.subviews[i];
         btn.enabled = (i!=0);
         btn.frame = CGRectMake(i * _btnW, 0, _btnW, btnH);
-    
-        btn.backgroundColor = i%2?[UIColor orangeColor]:[UIColor greenColor];
+        btn.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1];
     }
 }
 
@@ -124,50 +123,42 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     
-    if (context == @"test") {
-    
+    if (context == @"scrollToNextItem") {
+        
         self.prevSelectedIndex = [change[@"old"] integerValue];
         if (self.prevSelectedIndex == self.selectedIndex) {
             return;
         }
-
+        
         //设置按钮选中
         [self itemSelectedIndex:self.selectedIndex];
         UIButton * btn = self.titles[self.selectedIndex];
-    
+        
         //让选中按钮居中
         NSInteger  min = HYColumn  / 2 ;
         if (_selectedIndex <= min) {
-           
+            
             [UIView animateWithDuration:0.25 animations:^{
-                
                 _tabbar.contentOffset = CGPointMake(0, 0);
             }];
-           
-        }
-        if (_selectedIndex >= self.titles.count - min) {
+        }else if (_selectedIndex >= self.titles.count - min) {
             
             UIButton * tempBtn = self.titles[self.titles.count - min - 1];
             CGFloat btnX = (HYColumn % 2 ) ? tempBtn.center.x : (tempBtn.center.x + btn.frame.size.width * 0.5) ;
             CGFloat offsetX = _tabbar.center.x - btnX;
             
             [UIView animateWithDuration:0.25 animations:^{
-                
                 _tabbar.contentOffset = CGPointMake(- offsetX, 0);
             }];
             
-        }
-        
-        if (_selectedIndex > min && _selectedIndex < self.titles.count - min && self.titles.count > HYColumn ) {
+        }else if (_selectedIndex > min && _selectedIndex < self.titles.count - min && self.titles.count > HYColumn ) {
             
-            CGFloat   btnX  = (HYColumn % 2 ) ? btn.center.x : (btn.center.x - btn.frame.size.width * 0.5) ;
+            CGFloat btnX  = (HYColumn % 2 ) ? btn.center.x : (btn.center.x - btn.frame.size.width * 0.5) ;
             CGFloat offsetX = _tabbar.center.x - btnX;
-            
             [UIView animateWithDuration:0.25 animations:^{
-                
                 _tabbar.contentOffset = CGPointMake( - offsetX, 0);
             }];
-           
+            
         }
     } else {
         
@@ -186,10 +177,9 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     UICollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HYCollectionViewCell" forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor greenColor];
-    if (indexPath.row % 2) {
-        cell.backgroundColor = [UIColor orangeColor];
-    }
+    UIButton * btn = self.titles[indexPath.row];
+    cell.backgroundColor = btn.backgroundColor;
+    
     
     return cell;
 }
@@ -204,7 +194,7 @@
 #pragma mark - ************************* Private方法 *************************
 
 - (void)itemSelectedIndex:(NSInteger)index{
-
+    
     UIButton * selectedBtn = self.titles[self.prevSelectedIndex];
     selectedBtn.enabled = YES;
     _selectedIndex = index;
@@ -219,20 +209,18 @@
     self.contentView.contentOffset = CGPointMake(index * self.bounds.size.width, 0);
 }
 #pragma mark - ************************* 对外接口 *************************
-//外界传个控制器和一个标题,添加一个栏目
-- (void)addSubItemWithViewController:(NSString *)viewController title:(NSString *)title{
+//外界传个控制器,添加一个栏目
+- (void)addSubItemWithViewController:(UIViewController *)viewController{
     
     UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.tabbar addSubview:btn];
-    [self setupBtn:btn withTitle:title];
+    [self setupBtn:btn withTitle:viewController.title];
     [btn addTarget:self action:@selector(itemSelected:) forControlEvents:UIControlEventTouchUpInside];
-    
-    UIViewController * Vc = [[NSClassFromString(viewController) alloc]init];
-    [self.subViewControllers addObject:Vc];
-    
+    [self.subViewControllers addObject:viewController];
 }
-- (void)setupBtn:(UIButton *)btn withTitle:(NSString *)title{
 
+- (void)setupBtn:(UIButton *)btn withTitle:(NSString *)title{
+    
     [btn setTitle:title forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
