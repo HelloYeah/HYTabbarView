@@ -1,13 +1,14 @@
-# HYTabbarView
 ###导读:
-下面这个视图在很多App都有用到.我对这个View进行了封装,外界只需要调用一个接口,就能实现这个效果.
+下面这个视图(多视图滑动点击切换)在很多App都有用到.我对这个View进行了封装,外界只需要调用一个接口,就能实现这个效果.使用方法和系统的tabbarController很相似.相当好用的一个轮子,github源码分享https://github.com/HelloYeah/HYTabbarView.
+大家checkout时顺手点个星星,与人为乐，自得其乐.
 
 #####HYTabbarView效果图如下
-![2.gif](http://upload-images.jianshu.io/upload_images/1338042-b01ebfb42e5bca56.gif?imageMogr2/auto-orient/strip)
+![1.gif](http://upload-images.jianshu.io/upload_images/1338042-05d7e531dbd15359.gif?imageMogr2/auto-orient/strip) 
 
-#####HYTabbarView可配置一屏宽显示多少个标题,具体看项目需求	
+
+#####HYTabbarView可灵活配置一屏宽显示多少个标题,以及标题栏的高度,具体看项目需求	
 	#define HYTabbarViewHeight 49    //顶部标签条的高度
-	#define HYColumn 5      //一屏幕宽至多显示5个标题
+	#define HYColumn 4      //一屏幕宽显示4个标题
 
 ####实现思路详解
 - 界面分析:分为上下部分,顶部UIScrollView,底部UICollectionView.再实现两部分的联动即可实现 (底部视图相对复杂,占用内存大,底部用UICollectionView实现会比用UIScrollView性能好很多)
@@ -18,17 +19,16 @@
 #####代码片段:
 
 1.外界传个控制器和一个标题,添加一个栏目
-	- (void)addSubItemWithViewController:(NSString *)viewController title:(NSString *)title{
+
+	//外界传个控制器,添加一个栏目
+	- (void)addSubItemWithViewController:(UIViewController *)viewController{
 	    
 	    UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
 	    [self.tabbar addSubview:btn];
-	    [self setupBtn:btn withTitle:title];
+	    [self setupBtn:btn withTitle:viewController.title];
 	    [btn addTarget:self action:@selector(itemSelected:) forControlEvents:UIControlEventTouchUpInside];
-	    
-	    UIViewController * Vc = [[NSClassFromString(viewController) alloc]init];
-	    [self.subViewControllers addObject:Vc];
-	    
-	}
+	    [self.subViewControllers addObject:viewController];
+	}	
 2.KVO监听当前选中View的序号值
         
     //viewDidLoad中添加观察者
@@ -89,7 +89,7 @@
 	   if (!_tabbarView) {
 	       _tabbarView = ({
 	           
-	           HYTabbarView * tabbar = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 30, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+	           HYTabbarView * tabbar = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 30, [UIScreen mainScreen].bounds.size.width, 600)];
 	           
 	           for (NSInteger i = 0; i< 10; i ++) {
 	               UIViewController * vc = [[UIViewController alloc]init];
@@ -101,4 +101,3 @@
 	   }
 	   return _tabbarView;
 	}
-	
