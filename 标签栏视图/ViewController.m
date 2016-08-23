@@ -29,7 +29,7 @@
     if (!_tabbarView) {
         _tabbarView = ({
             
-            HYTabbarView * tabbar = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 30, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+            HYTabbarView * tabbar = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64)];
             
             for (NSInteger i = 0; i< 10; i ++) {
                 UIViewController * vc = [[UIViewController alloc]init];

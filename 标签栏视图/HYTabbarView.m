@@ -6,27 +6,21 @@
 //  Copyright © 2016年 HY. All rights reserved.
 //
 
-
-
 #import "HYTabbarView.h"
 
-#define HYTabbarViewHeight 49    //顶部标签条的高度
-#define HYColumn 5      //一屏幕宽显示5个标题
-#define HYContentViewHeight (self.bounds.size.height - HYTabbarViewHeight)
 #define HYScreenW [UIScreen mainScreen].bounds.size.width
-
+#define HYScreenH [UIScreen mainScreen].bounds.size.height
+static CGFloat const topBarItemMargin = 15; ///标题之间的间距
+static CGFloat const topBarHeight = 40; //顶部标签条的高度
 @interface HYTabbarView () <UICollectionViewDataSource,UICollectionViewDelegate>
-
 @property (nonatomic,strong) NSMutableArray * titles;
 @property (nonatomic,strong) NSMutableArray * subViewControllers;
 @property (nonatomic,weak) UIScrollView * tabbar;
 @property (nonatomic,weak) UICollectionView * contentView;
 @property (nonatomic,assign) NSInteger  selectedIndex;
-@property (nonatomic,assign) NSInteger  prevSelectedIndex;
-@property (nonatomic,assign) CGFloat  btnW;
-
+@property (nonatomic,assign) NSInteger  preSelectedIndex;
+@property (nonatomic,assign) CGFloat  tabbarWidth; //顶部标签条的宽度
 @end
-
 @implementation HYTabbarView
 
 #pragma mark - ************************* 重写构造方法 *************************
@@ -34,8 +28,10 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _selectedIndex = 0;
+        _preSelectedIndex = 0;
+        _tabbarWidth = topBarItemMargin;
         
-        self.selectedIndex = 0;
         [self setUpSubview];
     }
     return self;
@@ -65,14 +61,14 @@
     
     UIScrollView * tabbar = [[UIScrollView alloc]init];
     [self addSubview:tabbar];
+    self.tabbar = tabbar;
     tabbar.showsHorizontalScrollIndicator = NO;
     tabbar.showsVerticalScrollIndicator = NO;
     tabbar.bounces = NO;
-    self.tabbar = tabbar;
     
     UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
     //设置layout 属性
-    layout.itemSize = (CGSize){self.bounds.size.width,HYContentViewHeight};
+    layout.itemSize = (CGSize){self.bounds.size.width,(self.bounds.size.height - topBarHeight)};
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.minimumLineSpacing = 0;
     
@@ -89,6 +85,7 @@
     
     //注册cell
     [contentView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"HYCollectionViewCell"];
+    //添加监听
     [self addObserver:self forKeyPath:@"selectedIndex" options:NSKeyValueObservingOptionOld |NSKeyValueObservingOptionNew context:@"scrollToNextItem"];
 }
 
@@ -97,72 +94,39 @@
     
     [super layoutSubviews];
     
+    UIViewController * vc = [self getViewController];
+    vc.automaticallyAdjustsScrollViewInsets = NO;
     CGRect rect = self.bounds;
-    self.tabbar.frame = CGRectMake(0, 0, rect.size.width, HYTabbarViewHeight);
-    
-    self.contentView.frame = CGRectMake(0, CGRectGetMaxY(self.tabbar.frame), rect.size.width,HYContentViewHeight);
-    
-    //设置tabbar内部的按钮位置
-    NSInteger count = (self.titles.count > HYColumn)? HYColumn : self.titles.count;
-    _btnW = rect.size.width / (count * 1.0);
-    CGFloat btnH = HYTabbarViewHeight;
-    self.tabbar.contentSize = CGSizeMake(self.titles.count * _btnW, 0);
-    
+    self.tabbar.frame = CGRectMake(0, 0, rect.size.width, topBarHeight);
+    self.tabbar.contentSize = CGSizeMake(_tabbarWidth, 0);
+    self.contentView.frame = CGRectMake(0, CGRectGetMaxY(self.tabbar.frame), rect.size.width,(self.bounds.size.height - topBarHeight));
+    CGFloat btnH = topBarHeight;
+    CGFloat btnX = topBarItemMargin;
     for (int i = 0 ; i < self.titles.count; i++) {
         
         UIButton * btn = self.tabbar.subviews[i];
-        btn.enabled = (i!=0);
-        btn.frame = CGRectMake(i * _btnW, 0, _btnW, btnH);
-        btn.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:1];
+        btn.frame = CGRectMake(btnX, 0, btn.frame.size.width, btnH);
+        btn.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:0.8];
+        btnX += btn.frame.size.width + topBarItemMargin;
     }
 }
-
 
 #pragma mark -   *************************  KVO监听方法 *************************
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    
     if (context == @"scrollToNextItem") {
-        
-        self.prevSelectedIndex = [change[@"old"] integerValue];
-        if (self.prevSelectedIndex == self.selectedIndex) {
-            return;
-        }
-        
         //设置按钮选中
         [self itemSelectedIndex:self.selectedIndex];
         UIButton * btn = self.titles[self.selectedIndex];
-        
-        //让选中按钮居中
-        NSInteger  min = HYColumn  / 2 ;
-        if (_selectedIndex <= min) {
-            
-            [UIView animateWithDuration:0.25 animations:^{
-                _tabbar.contentOffset = CGPointMake(0, 0);
-            }];
-        }else if (_selectedIndex >= self.titles.count - min) {
-            
-            UIButton * tempBtn = self.titles[self.titles.count - min - 1];
-            CGFloat btnX = (HYColumn % 2 ) ? tempBtn.center.x : (tempBtn.center.x + btn.frame.size.width * 0.5) ;
-            CGFloat offsetX = _tabbar.center.x - btnX;
-            
-            [UIView animateWithDuration:0.25 animations:^{
-                _tabbar.contentOffset = CGPointMake(- offsetX, 0);
-            }];
-            
-        }else if (_selectedIndex > min && _selectedIndex < self.titles.count - min && self.titles.count > HYColumn ) {
-            
-            CGFloat btnX  = (HYColumn % 2 ) ? btn.center.x : (btn.center.x - btn.frame.size.width * 0.5) ;
-            CGFloat offsetX = _tabbar.center.x - btnX;
-            [UIView animateWithDuration:0.25 animations:^{
-                _tabbar.contentOffset = CGPointMake( - offsetX, 0);
-            }];
-            
-        }
-    } else {
-        
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        // 计算偏移量
+        CGFloat offsetX = btn.center.x - HYScreenW * 0.5;
+        if (offsetX < 0) offsetX = 0;
+        // 获取最大滚动范围
+        CGFloat maxOffsetX = self.tabbar.contentSize.width - HYScreenW;
+        if (offsetX > maxOffsetX) offsetX = maxOffsetX;
+        // 滚动标题滚动条
+        [self.tabbar setContentOffset:CGPointMake(offsetX, 0) animated:YES];
     }
 }
 #pragma mark - ************************* 代理方法 *************************
@@ -179,8 +143,6 @@
     UICollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HYCollectionViewCell" forIndexPath:indexPath];
     UIButton * btn = self.titles[indexPath.row];
     cell.backgroundColor = btn.backgroundColor;
-    
-    
     return cell;
 }
 
@@ -188,25 +150,41 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
-    self.selectedIndex = (scrollView.contentOffset.x + HYScreenW * 0.5) / HYScreenW;
+    if(self.selectedIndex != (scrollView.contentOffset.x + HYScreenW * 0.5) / HYScreenW){
+        
+        self.selectedIndex = (scrollView.contentOffset.x + HYScreenW * 0.5) / HYScreenW;
+    }
 }
 
 #pragma mark - ************************* Private方法 *************************
 
 - (void)itemSelectedIndex:(NSInteger)index{
     
-    UIButton * selectedBtn = self.titles[self.prevSelectedIndex];
-    selectedBtn.enabled = YES;
+    UIButton * selectedBtn = self.titles[_preSelectedIndex];
+    selectedBtn.selected = NO;
     _selectedIndex = index;
+    _preSelectedIndex = _selectedIndex;
     UIButton * btn = self.titles[index];
-    btn.enabled = NO;
+    btn.selected = YES;
 }
 
 - (void)itemSelected:(UIButton *)btn{
     
     NSInteger index = [self.titles indexOfObject:btn];
+    [self itemSelectedIndex:index];
     self.selectedIndex = index;
     self.contentView.contentOffset = CGPointMake(index * self.bounds.size.width, 0);
+}
+
+- (UIViewController *)getViewController{
+    
+    for (UIView * next = [self superview]; next; next = next.superview) {
+        UIResponder *nextResponder = [next nextResponder];
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)nextResponder;
+        }
+    }
+    return nil;
 }
 #pragma mark - ************************* 对外接口 *************************
 //外界传个控制器,添加一个栏目
@@ -214,16 +192,19 @@
     
     UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.tabbar addSubview:btn];
+    [self.titles addObject:btn];
     [self setupBtn:btn withTitle:viewController.title];
     [btn addTarget:self action:@selector(itemSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.subViewControllers addObject:viewController];
 }
 
+// 设置顶部标签按钮
 - (void)setupBtn:(UIButton *)btn withTitle:(NSString *)title{
     
     [btn setTitle:title forState:UIControlStateNormal];
+    [btn sizeToFit];
+    _tabbarWidth += btn.frame.size.width + topBarItemMargin;
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
-    [self.titles addObject:btn];
+    [btn setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
 }
 @end
