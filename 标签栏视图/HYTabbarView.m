@@ -31,7 +31,6 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
         _selectedIndex = 0;
         _preSelectedIndex = 0;
         _tabbarWidth = topBarItemMargin;
-        
         [self setUpSubview];
     }
     return self;
@@ -106,9 +105,9 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
         
         UIButton * btn = self.tabbar.subviews[i];
         btn.frame = CGRectMake(btnX, 0, btn.frame.size.width, btnH);
-        btn.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:0.8];
         btnX += btn.frame.size.width + topBarItemMargin;
     }
+    [self itemSelectedIndex:0];
 }
 
 #pragma mark -   *************************  KVO监听方法 *************************
@@ -141,8 +140,7 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     UICollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HYCollectionViewCell" forIndexPath:indexPath];
-    UIButton * btn = self.titles[indexPath.row];
-    cell.backgroundColor = btn.backgroundColor;
+    cell.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:0.8];
     return cell;
 }
 
@@ -160,12 +158,16 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 
 - (void)itemSelectedIndex:(NSInteger)index{
     
-    UIButton * selectedBtn = self.titles[_preSelectedIndex];
-    selectedBtn.selected = NO;
+    UIButton * preSelectedBtn = self.titles[_preSelectedIndex];
+    preSelectedBtn.selected = NO;
     _selectedIndex = index;
     _preSelectedIndex = _selectedIndex;
-    UIButton * btn = self.titles[index];
-    btn.selected = YES;
+    UIButton * selectedBtn = self.titles[index];
+    selectedBtn.selected = YES;
+    [UIView animateWithDuration:0.25 animations:^{
+        preSelectedBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        selectedBtn.titleLabel.font = [UIFont systemFontOfSize:18];
+    }];
 }
 
 - (void)itemSelected:(UIButton *)btn{
@@ -193,6 +195,7 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.tabbar addSubview:btn];
     [self.titles addObject:btn];
+    btn.titleLabel.font = [UIFont systemFontOfSize:18];
     [self setupBtn:btn withTitle:viewController.title];
     [btn addTarget:self action:@selector(itemSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.subViewControllers addObject:viewController];
@@ -204,6 +207,7 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     [btn setTitle:title forState:UIControlStateNormal];
     [btn sizeToFit];
     _tabbarWidth += btn.frame.size.width + topBarItemMargin;
+    btn.titleLabel.font = [UIFont systemFontOfSize:15];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
 }
