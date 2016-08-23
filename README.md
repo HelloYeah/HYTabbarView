@@ -1,6 +1,10 @@
 ###导读:
-下面这个效果(多视图滑动点击切换)在很多App都有用到.我相信大家都写过很多遍了.网上也有大量的Demo,设计思路,大致差不多,代码繁杂程度不忍直视.笔者自己对这个视图效果进行了封装,代码精简美观,接口简单.外界只需要调用一个接口,就能实现这个效果.使用方法和系统的tabbarController相似,只需要给HYTabbarView添加对应控制器即可.
-github源码分享https://github.com/HelloYeah/HYTabbarView.
+下面这个效果(多视图滑动点击切换)在很多App都有用到.我相信大家都写过很多遍了.
+网上也有大量的Demo,设计思路,大致差不多,代码繁杂程度不忍直视.笔者自己对这个视图效果进行了封装,代码精简美观,接口简单.外界只需要调用一个接口,就能实现这个效果.
+使用方法和系统的tabbarController相似,只需要给HYTabbarView添加对应控制器即可.
+
+个人简书链接:http://www.jianshu.com/users/cc9c23e60cbf/latest_articles
+
 大家checkout时顺手点个星星,与人为乐，自得其乐.
 
 #####HYTabbarView效果图如下
