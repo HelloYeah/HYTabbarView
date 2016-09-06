@@ -7,7 +7,7 @@
 //
 
 #import "HYTabbarView.h"
-
+#import "HYTabbarCollectionCell.h"
 #define HYScreenW [UIScreen mainScreen].bounds.size.width
 #define HYScreenH [UIScreen mainScreen].bounds.size.height
 static CGFloat const topBarItemMargin = 15; ///标题之间的间距
@@ -83,7 +83,7 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     contentView.delegate = self;
     
     //注册cell
-    [contentView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"HYCollectionViewCell"];
+    [contentView registerClass:[HYTabbarCollectionCell class] forCellWithReuseIdentifier:@"HYTabbarCollectionCell"];
     //添加监听
     [self addObserver:self forKeyPath:@"selectedIndex" options:NSKeyValueObservingOptionOld |NSKeyValueObservingOptionNew context:@"scrollToNextItem"];
 }
@@ -139,8 +139,9 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
-    UICollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HYCollectionViewCell" forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0 green:arc4random_uniform(255)/255.0 blue:arc4random_uniform(255)/255.0 alpha:0.8];
+    HYTabbarCollectionCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HYTabbarCollectionCell" forIndexPath:indexPath];
+
+    cell.subVc = self.subViewControllers[indexPath.row] ;
     return cell;
 }
 
