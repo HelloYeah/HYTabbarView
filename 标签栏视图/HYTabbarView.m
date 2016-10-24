@@ -23,6 +23,8 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 @end
 @implementation HYTabbarView
 
+
+
 #pragma mark - ************************* 重写构造方法 *************************
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -34,6 +36,12 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
         [self setUpSubview];
     }
     return self;
+}
+
+#pragma mark - ************************* 移除监听 *************************
+- (void)dealloc{
+    
+    [self removeObserver:self forKeyPath:@"selectedIndex"];
 }
 
 #pragma mark - ************************* 懒加载 *************************
