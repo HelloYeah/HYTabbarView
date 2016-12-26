@@ -23,7 +23,7 @@
     [super viewDidLoad];
     
     [self.view addSubview:self.tabbarView];
-     
+    self.automaticallyAdjustsScrollViewInsets = NO;
 }
 
 //懒加载

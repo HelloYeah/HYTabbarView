@@ -28,12 +28,10 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
-        UIViewController * vc = [self getViewController];
-        vc.automaticallyAdjustsScrollViewInsets = NO;
         _selectedIndex = 0;
         _preSelectedIndex = 0;
         _tabbarWidth = topBarItemMargin;
+        self.backgroundColor = [UIColor redColor];
         [self setUpSubview];
     }
     return self;
@@ -65,6 +63,7 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     self.tabbar = tabbar;
     tabbar.showsHorizontalScrollIndicator = NO;
     tabbar.showsVerticalScrollIndicator = NO;
+    _tabbar.backgroundColor = [UIColor orangeColor];
     tabbar.bounces = NO;
     
     UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
@@ -92,7 +91,6 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 - (void)layoutSubviews{
     
     [super layoutSubviews];
-
     CGRect rect = self.bounds;
     self.tabbar.frame = CGRectMake(0, 0, rect.size.width, topBarHeight);
     self.tabbar.contentSize = CGSizeMake(_tabbarWidth, 0);
@@ -152,19 +150,19 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     UIButton * selectedBtn = self.titles[index];
     selectedBtn.selected = YES;
     
-    UIButton * btn = self.titles[self.selectedIndex];
-    // 计算偏移量
-    CGFloat offsetX = btn.center.x - HYScreenW * 0.5;
-    if (offsetX < 0) offsetX = 0;
-    // 获取最大滚动范围
-    CGFloat maxOffsetX = self.tabbar.contentSize.width - HYScreenW;
-    if (offsetX > maxOffsetX) offsetX = maxOffsetX;
-    // 滚动标题滚动条
-    [self.tabbar setContentOffset:CGPointMake(offsetX, 0) animated:YES];
-
     [UIView animateWithDuration:0.25 animations:^{
         preSelectedBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         selectedBtn.titleLabel.font = [UIFont systemFontOfSize:18];
+        
+        UIButton * btn = self.titles[self.selectedIndex];
+        // 计算偏移量
+        CGFloat offsetX = btn.center.x - HYScreenW * 0.5;
+        if (offsetX < 0) offsetX = 0;
+        // 获取最大滚动范围
+        CGFloat maxOffsetX = self.tabbar.contentSize.width - HYScreenW;
+        if (offsetX > maxOffsetX) offsetX = maxOffsetX;
+        // 滚动标题滚动条
+        [self.tabbar setContentOffset:CGPointMake(offsetX, 0) animated:YES];
     }];
 }
 
@@ -176,17 +174,6 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     self.contentView.contentOffset = CGPointMake(index * self.bounds.size.width, 0);
 }
 
-
-- (UIViewController *)getViewController{
-    
-    for (UIView * next = [self superview]; next; next = next.superview) {
-        UIResponder *nextResponder = [next nextResponder];
-        if ([nextResponder isKindOfClass:[UIViewController class]]) {
-            return (UIViewController *)nextResponder;
-        }
-    }
-    return nil;
-}
 #pragma mark - ************************* 对外接口 *************************
 //外界传个控制器,添加一个栏目
 - (void)addSubItemWithViewController:(UIViewController *)viewController{
