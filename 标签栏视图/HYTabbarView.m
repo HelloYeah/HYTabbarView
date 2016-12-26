@@ -38,13 +38,6 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     }
     return self;
 }
-
-#pragma mark - ************************* 移除监听 *************************
-- (void)dealloc{
-    
-    [self removeObserver:self forKeyPath:@"selectedIndex"];
-}
-
 #pragma mark - ************************* 懒加载 *************************
 
 - (NSMutableArray *)titles{
@@ -158,18 +151,20 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     _preSelectedIndex = _selectedIndex;
     UIButton * selectedBtn = self.titles[index];
     selectedBtn.selected = YES;
+    
+    UIButton * btn = self.titles[self.selectedIndex];
+    // 计算偏移量
+    CGFloat offsetX = btn.center.x - HYScreenW * 0.5;
+    if (offsetX < 0) offsetX = 0;
+    // 获取最大滚动范围
+    CGFloat maxOffsetX = self.tabbar.contentSize.width - HYScreenW;
+    if (offsetX > maxOffsetX) offsetX = maxOffsetX;
+    // 滚动标题滚动条
+    [self.tabbar setContentOffset:CGPointMake(offsetX, 0) animated:YES];
+
     [UIView animateWithDuration:0.25 animations:^{
         preSelectedBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         selectedBtn.titleLabel.font = [UIFont systemFontOfSize:18];
-        UIButton * btn = self.titles[self.selectedIndex];
-        // 计算偏移量
-        CGFloat offsetX = btn.center.x - HYScreenW * 0.5;
-        if (offsetX < 0) offsetX = 0;
-        // 获取最大滚动范围
-        CGFloat maxOffsetX = self.tabbar.contentSize.width - HYScreenW;
-        if (offsetX > maxOffsetX) offsetX = maxOffsetX;
-        // 滚动标题滚动条
-        [self.tabbar setContentOffset:CGPointMake(offsetX, 0) animated:YES];
     }];
 }
 
@@ -203,8 +198,6 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     [self setupBtn:btn withTitle:viewController.title];
     [btn addTarget:self action:@selector(itemSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.subViewControllers addObject:viewController];
-//    [self setNeedsLayout];
-//    [self layoutIfNeeded];
 }
 
 // 设置顶部标签按钮
