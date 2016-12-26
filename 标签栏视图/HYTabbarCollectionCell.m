@@ -16,22 +16,12 @@
 
 @implementation HYTabbarCollectionCell
 
-//- (instancetype)init{
-//    if ([super init]) {
-//        UIView * view = [[UIView alloc]initWithFrame:self.bounds];
-//        [self addSubview:view];
-//        view.backgroundColor = [UIColor orangeColor];
-//        self.subView = view;
-//    }
-//    
-//    return self;
-//}
-
 - (void)setSubVc:(UIViewController *)subVc{
     
     _subVc = subVc;
     [self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self.contentView addSubview:subVc.view];
+    subVc.view.frame = self.bounds;
 }
 
 @end

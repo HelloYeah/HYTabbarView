@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface HYTabbarCollectionCell : UICollectionViewCell
-@property (nonatomic,strong) UIViewController * subVc;
+@property (nonatomic,strong) UIViewController *subVc;
 @end

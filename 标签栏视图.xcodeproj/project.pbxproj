@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B451CF211D7E5611003118CC /* OneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B451CF201D7E5611003118CC /* OneViewController.m */; };
+		B40164AC1DC3026200AC2064 /* OneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B40164AB1DC3026200AC2064 /* OneViewController.m */; };
 		B451CF241D7E57D7003118CC /* HYTabbarCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B451CF231D7E57D7003118CC /* HYTabbarCollectionCell.m */; };
 		B451CF271D7E5BAF003118CC /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B451CF261D7E5BAF003118CC /* TestViewController.m */; };
 		B48B7DDF1CACD4450078FC0C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B48B7DDE1CACD4450078FC0C /* main.m */; };
@@ -40,8 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B451CF1F1D7E5611003118CC /* OneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneViewController.h; sourceTree = "<group>"; };
-		B451CF201D7E5611003118CC /* OneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneViewController.m; sourceTree = "<group>"; };
+		B40164AA1DC3026200AC2064 /* OneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneViewController.h; sourceTree = "<group>"; };
+		B40164AB1DC3026200AC2064 /* OneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneViewController.m; sourceTree = "<group>"; };
 		B451CF221D7E57D7003118CC /* HYTabbarCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYTabbarCollectionCell.h; sourceTree = "<group>"; };
 		B451CF231D7E57D7003118CC /* HYTabbarCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYTabbarCollectionCell.m; sourceTree = "<group>"; };
 		B451CF251D7E5BAF003118CC /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
@@ -123,8 +123,8 @@
 				B48B7DE11CACD4450078FC0C /* AppDelegate.m */,
 				B48B7DE31CACD4450078FC0C /* ViewController.h */,
 				B48B7DE41CACD4450078FC0C /* ViewController.m */,
-				B451CF1F1D7E5611003118CC /* OneViewController.h */,
-				B451CF201D7E5611003118CC /* OneViewController.m */,
+				B40164AA1DC3026200AC2064 /* OneViewController.h */,
+				B40164AB1DC3026200AC2064 /* OneViewController.m */,
 				B451CF251D7E5BAF003118CC /* TestViewController.h */,
 				B451CF261D7E5BAF003118CC /* TestViewController.m */,
 				B48B7DE61CACD4450078FC0C /* Main.storyboard */,
@@ -295,11 +295,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B48B7DE51CACD4450078FC0C /* ViewController.m in Sources */,
-				B451CF211D7E5611003118CC /* OneViewController.m in Sources */,
 				B451CF271D7E5BAF003118CC /* TestViewController.m in Sources */,
 				B48B7DE21CACD4450078FC0C /* AppDelegate.m in Sources */,
 				B48B7E121CACD4890078FC0C /* HYTabbarView.m in Sources */,
 				B451CF241D7E57D7003118CC /* HYTabbarCollectionCell.m in Sources */,
+				B40164AC1DC3026200AC2064 /* OneViewController.m in Sources */,
 				B48B7DDF1CACD4450078FC0C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

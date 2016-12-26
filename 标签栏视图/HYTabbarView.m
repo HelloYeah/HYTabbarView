@@ -23,13 +23,14 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 @end
 @implementation HYTabbarView
 
-
-
 #pragma mark - ************************* 重写构造方法 *************************
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        UIViewController * vc = [self getViewController];
+        vc.automaticallyAdjustsScrollViewInsets = NO;
         _selectedIndex = 0;
         _preSelectedIndex = 0;
         _tabbarWidth = topBarItemMargin;
@@ -92,17 +93,13 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     
     //注册cell
     [contentView registerClass:[HYTabbarCollectionCell class] forCellWithReuseIdentifier:@"HYTabbarCollectionCell"];
-    //添加监听
-    [self addObserver:self forKeyPath:@"selectedIndex" options:NSKeyValueObservingOptionOld |NSKeyValueObservingOptionNew context:@"scrollToNextItem"];
 }
 
 //布局子控件
 - (void)layoutSubviews{
     
     [super layoutSubviews];
-    
-    UIViewController * vc = [self getViewController];
-    vc.automaticallyAdjustsScrollViewInsets = NO;
+
     CGRect rect = self.bounds;
     self.tabbar.frame = CGRectMake(0, 0, rect.size.width, topBarHeight);
     self.tabbar.contentSize = CGSizeMake(_tabbarWidth, 0);
@@ -115,31 +112,12 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
         btn.frame = CGRectMake(btnX, 0, btn.frame.size.width, btnH);
         btnX += btn.frame.size.width + topBarItemMargin;
     }
-    [self itemSelectedIndex:0];
+    
+    [self itemSelectedIndex:0];//
 }
 
-#pragma mark -   *************************  KVO监听方法 *************************
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if (context == @"scrollToNextItem") {
-        //设置按钮选中
-        [self itemSelectedIndex:self.selectedIndex];
-        UIButton * btn = self.titles[self.selectedIndex];
-        // 计算偏移量
-        CGFloat offsetX = btn.center.x - HYScreenW * 0.5;
-        if (offsetX < 0) offsetX = 0;
-        // 获取最大滚动范围
-        CGFloat maxOffsetX = self.tabbar.contentSize.width - HYScreenW;
-        if (offsetX > maxOffsetX) offsetX = maxOffsetX;
-        // 滚动标题滚动条
-        [self.tabbar setContentOffset:CGPointMake(offsetX, 0) animated:YES];
-    }
-}
 #pragma mark - ************************* 代理方法 *************************
-
 //CollectionViewDataSource方法
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
     return self.subViewControllers.count;
@@ -154,16 +132,23 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 }
 
 //UIScrollViewDelegate代理方法
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     if(self.selectedIndex != (scrollView.contentOffset.x + HYScreenW * 0.5) / HYScreenW){
-        
         self.selectedIndex = (scrollView.contentOffset.x + HYScreenW * 0.5) / HYScreenW;
     }
 }
 
-#pragma mark - ************************* Private方法 *************************
+#pragma mark - ************************* Private方法 ************************
+- (void)setSelectedIndex:(NSInteger)selectedIndex {
+    
+    
+    if (_selectedIndex != selectedIndex) {
+        _selectedIndex = selectedIndex;
+        //设置按钮选中
+        [self itemSelectedIndex:self.selectedIndex];
+    }
+}
 
 - (void)itemSelectedIndex:(NSInteger)index{
     
@@ -176,6 +161,15 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     [UIView animateWithDuration:0.25 animations:^{
         preSelectedBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         selectedBtn.titleLabel.font = [UIFont systemFontOfSize:18];
+        UIButton * btn = self.titles[self.selectedIndex];
+        // 计算偏移量
+        CGFloat offsetX = btn.center.x - HYScreenW * 0.5;
+        if (offsetX < 0) offsetX = 0;
+        // 获取最大滚动范围
+        CGFloat maxOffsetX = self.tabbar.contentSize.width - HYScreenW;
+        if (offsetX > maxOffsetX) offsetX = maxOffsetX;
+        // 滚动标题滚动条
+        [self.tabbar setContentOffset:CGPointMake(offsetX, 0) animated:YES];
     }];
 }
 
@@ -186,6 +180,7 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     self.selectedIndex = index;
     self.contentView.contentOffset = CGPointMake(index * self.bounds.size.width, 0);
 }
+
 
 - (UIViewController *)getViewController{
     
@@ -208,6 +203,8 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     [self setupBtn:btn withTitle:viewController.title];
     [btn addTarget:self action:@selector(itemSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.subViewControllers addObject:viewController];
+//    [self setNeedsLayout];
+//    [self layoutIfNeeded];
 }
 
 // 设置顶部标签按钮
@@ -219,5 +216,6 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     btn.titleLabel.font = [UIFont systemFontOfSize:15];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+    
 }
 @end
