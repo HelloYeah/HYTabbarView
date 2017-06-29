@@ -8,7 +8,7 @@
 
 个人简书链接:http://www.jianshu.com/users/cc9c23e60cbf/latest_articles
 
-大家checkout时顺手点个星星,与人为乐，自得其乐.
+大家checkout时顺手点个星星,赠人玫瑰,手有余香.
 
 #####HYTabbarView效果图如下
 ![1.gif](http://chuantu.biz/t5/30/1471921557x2031068758.gif) 
