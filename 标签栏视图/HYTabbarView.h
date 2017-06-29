@@ -15,4 +15,7 @@
  */
 - (void)addSubItemWithViewController:(UIViewController *)viewController;
 
+//选中新增的item
+- (void)selectNewItem;
+
 @end

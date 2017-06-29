@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B40164AC1DC3026200AC2064 /* OneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B40164AB1DC3026200AC2064 /* OneViewController.m */; };
 		B451CF241D7E57D7003118CC /* HYTabbarCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B451CF231D7E57D7003118CC /* HYTabbarCollectionCell.m */; };
 		B451CF271D7E5BAF003118CC /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B451CF261D7E5BAF003118CC /* TestViewController.m */; };
 		B48B7DDF1CACD4450078FC0C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B48B7DDE1CACD4450078FC0C /* main.m */; };
@@ -20,6 +19,7 @@
 		B48B7E031CACD4450078FC0C /* _____UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B48B7E021CACD4450078FC0C /* _____UITests.m */; };
 		B48B7E121CACD4890078FC0C /* HYTabbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = B48B7E111CACD4890078FC0C /* HYTabbarView.m */; };
 		B4B442AB1CB4DCCD00FBDCC4 /* Objective-C.gitignore in Resources */ = {isa = PBXBuildFile; fileRef = B4B442AA1CB4DCCD00FBDCC4 /* Objective-C.gitignore */; };
+		B4FECE6B1F04EF8500276B3E /* HYTopBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FECE6A1F04EF8500276B3E /* HYTopBar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,8 +40,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B40164AA1DC3026200AC2064 /* OneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneViewController.h; sourceTree = "<group>"; };
-		B40164AB1DC3026200AC2064 /* OneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneViewController.m; sourceTree = "<group>"; };
 		B451CF221D7E57D7003118CC /* HYTabbarCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYTabbarCollectionCell.h; sourceTree = "<group>"; };
 		B451CF231D7E57D7003118CC /* HYTabbarCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYTabbarCollectionCell.m; sourceTree = "<group>"; };
 		B451CF251D7E5BAF003118CC /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
@@ -65,6 +63,8 @@
 		B48B7E101CACD4890078FC0C /* HYTabbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYTabbarView.h; sourceTree = "<group>"; };
 		B48B7E111CACD4890078FC0C /* HYTabbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYTabbarView.m; sourceTree = "<group>"; };
 		B4B442AA1CB4DCCD00FBDCC4 /* Objective-C.gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Objective-C.gitignore"; sourceTree = "<group>"; };
+		B4FECE691F04EF8500276B3E /* HYTopBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYTopBar.h; sourceTree = "<group>"; };
+		B4FECE6A1F04EF8500276B3E /* HYTopBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYTopBar.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,12 +119,12 @@
 				B48B7E111CACD4890078FC0C /* HYTabbarView.m */,
 				B451CF221D7E57D7003118CC /* HYTabbarCollectionCell.h */,
 				B451CF231D7E57D7003118CC /* HYTabbarCollectionCell.m */,
+				B4FECE691F04EF8500276B3E /* HYTopBar.h */,
+				B4FECE6A1F04EF8500276B3E /* HYTopBar.m */,
 				B48B7DE01CACD4450078FC0C /* AppDelegate.h */,
 				B48B7DE11CACD4450078FC0C /* AppDelegate.m */,
 				B48B7DE31CACD4450078FC0C /* ViewController.h */,
 				B48B7DE41CACD4450078FC0C /* ViewController.m */,
-				B40164AA1DC3026200AC2064 /* OneViewController.h */,
-				B40164AB1DC3026200AC2064 /* OneViewController.m */,
 				B451CF251D7E5BAF003118CC /* TestViewController.h */,
 				B451CF261D7E5BAF003118CC /* TestViewController.m */,
 				B48B7DE61CACD4450078FC0C /* Main.storyboard */,
@@ -299,7 +299,7 @@
 				B48B7DE21CACD4450078FC0C /* AppDelegate.m in Sources */,
 				B48B7E121CACD4890078FC0C /* HYTabbarView.m in Sources */,
 				B451CF241D7E57D7003118CC /* HYTabbarCollectionCell.m in Sources */,
-				B40164AC1DC3026200AC2064 /* OneViewController.m in Sources */,
+				B4FECE6B1F04EF8500276B3E /* HYTopBar.m in Sources */,
 				B48B7DDF1CACD4450078FC0C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

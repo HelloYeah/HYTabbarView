@@ -8,11 +8,10 @@
 
 #import "ViewController.h"
 #import "HYTabbarView.h"
-#import "OneViewController.h"
 #import "TestViewController.h"
 
 @interface ViewController ()
-
+@property (nonatomic,assign) NSInteger index;
 @property (nonatomic,strong) HYTabbarView * tabbarView;
 @end
 
@@ -24,6 +23,16 @@
     
     [self.view addSubview:self.tabbarView];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.index = 0;
+}
+
+- (IBAction)newItem {
+    
+    TestViewController *vc0 = [[TestViewController alloc]init];
+    vc0.title = [NSString stringWithFormat:@"NewItem-%02ld",self.index];
+    self.index++;
+    [_tabbarView addSubItemWithViewController:vc0];
+    [_tabbarView selectNewItem];
 }
 
 //懒加载
@@ -49,7 +58,7 @@
             TestViewController * vc3 = [[TestViewController alloc]init];
             vc3.title = @"中国好声音";
             [tabbar addSubItemWithViewController:vc3];
-            
+
             TestViewController * vc4 = [[TestViewController alloc]init];
             vc4.title = @"数码";
             [tabbar addSubItemWithViewController:vc4];
@@ -70,10 +79,6 @@
             vc8.title = @"时尚";
             [tabbar addSubItemWithViewController:vc8];
             
-            OneViewController * vc9 = [[OneViewController alloc]init];
-            vc9.title = @"自定义控制器";
-            [tabbar addSubItemWithViewController:vc9];
-
             tabbar;
         });
     }
