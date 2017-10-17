@@ -60,10 +60,12 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 }
 
 
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    [self.tabbar setSelectedItem:indexPath.item];
-
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(nonnull UICollectionViewCell *)cell forItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    
+    NSInteger index = (collectionView.contentOffset.x + collectionView.bounds.size.width * 0.5) / collectionView.bounds.size.width;
+    [self.tabbar setSelectedItem:index];
 }
+
 
 //HYTopBarDelegate方法
 - (void)HYTopBarChangeSelectedItem:(HYTopBar *)topbar selectedIndex:(NSInteger)index {
@@ -76,6 +78,7 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 - (void)addSubItemWithViewController:(UIViewController *)viewController{
     
     [self.tabbar addTitleBtn:viewController.title];
+    [self.tabbar setSelectedItem:0];
     [self.subViewControllers addObject:viewController];
     [self.contentView reloadData];
 }

@@ -55,11 +55,11 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     UIButton *btn = self.btnArray[index];
     [UIView animateWithDuration:0.25 animations:^{
         
-        btn.selected = YES;
-        btn.titleLabel.font = [UIFont systemFontOfSize:18];
-        
         self.selectedBtn.selected = NO;
         self.selectedBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        
+        btn.selected = YES;
+        btn.titleLabel.font = [UIFont systemFontOfSize:18];
         self.selectedBtn = btn;
 
         // 计算偏移量
