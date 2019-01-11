@@ -7,9 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "HYTopBar.h"
 @interface HYTabbarView : UIView
+/** 标题栏*/
+@property(nonatomic, strong)HYTopBar *topBar;
 
+/** 页面与topBar的距离*/
+@property(nonatomic, assign)CGFloat controllerWithTopBarMargin;
 /**
  *  添加一个子控制器
  */

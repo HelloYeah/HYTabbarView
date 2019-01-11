@@ -8,15 +8,15 @@
 
 #import "HYTabbarView.h"
 #import "HYTabbarCollectionCell.h"
-#import "HYTopBar.h"
 
-static CGFloat const topBarHeight = 40; //顶部标签条的高度
+//#define  topBarHeight FitWidth(30)//顶部标签条的高度
 @interface HYTabbarView () <UICollectionViewDataSource,UICollectionViewDelegate,HYTopBarDelegate>
 
 @property (nonatomic,strong) NSMutableArray *subViewControllers;
-@property (nonatomic,strong) HYTopBar *tabbar;
 @property (nonatomic,strong) UICollectionView *contentView;
 @property (nonatomic,assign) CGFloat tabbarWidth; //顶部标签条的宽度
+
+@property(nonatomic, strong)UICollectionViewFlowLayout *layout;
 
 @end
 
@@ -36,10 +36,10 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 //添加子控件
 - (void)setUpSubview{
     
-    self.tabbar = [[HYTopBar alloc] initWithFrame:CGRectMake(0, 0, HYScreenW, topBarHeight)];
-    [self addSubview:self.tabbar];
-    self.tabbar.backgroundColor = [UIColor orangeColor];
-    self.tabbar.topBarDelegate = self;
+    self.topBar = [[HYTopBar alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    [self addSubview:self.topBar];
+    self.topBar.backgroundColor = [UIColor whiteColor];
+    self.topBar.topBarDelegate = self;
     
     [self addSubview:self.contentView];
 }
@@ -54,7 +54,7 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     HYTabbarCollectionCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HYTabbarCollectionCell" forIndexPath:indexPath];
-
+    
     cell.subVc = self.subViewControllers[indexPath.row] ;
     return cell;
 }
@@ -63,7 +63,7 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(nonnull UICollectionViewCell *)cell forItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     
     NSInteger index = (collectionView.contentOffset.x + collectionView.bounds.size.width * 0.5) / collectionView.bounds.size.width;
-    [self.tabbar setSelectedItem:index];
+    [self.topBar setSelectedItem:index];
 }
 
 
@@ -73,12 +73,18 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     self.contentView.contentOffset = CGPointMake(HYScreenW * index, 0);
 }
 
+-(void)HYTopBarChangeContentViewHeight{
+    self.layout.itemSize = (CGSize){self.bounds.size.width,(self.frame.size.height - self.topBar.topBarHeight - self.controllerWithTopBarMargin)};
+    _contentView.frame = CGRectMake(0, self.topBar.topBarHeight + self.controllerWithTopBarMargin, HYScreenW, self.layout.itemSize.height);
+}
 #pragma mark - ************************* 对外接口 *************************
+
+
 //外界传个控制器,添加一个栏目
 - (void)addSubItemWithViewController:(UIViewController *)viewController{
     
-    [self.tabbar addTitleBtn:viewController.title];
-    [self.tabbar setSelectedItem:0];
+    [self.topBar addTitleBtn:viewController.title];
+    [self.topBar setSelectedItem:0];
     [self.subViewControllers addObject:viewController];
     [self.contentView reloadData];
 }
@@ -91,6 +97,12 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 }
 
 #pragma mark - ************************* 懒加载 *************************
+-(void)setControllerWithTopBarMargin:(CGFloat)controllerWithTopBarMargin{
+    _controllerWithTopBarMargin = controllerWithTopBarMargin;
+    self.layout.itemSize = (CGSize){self.bounds.size.width,(self.frame.size.height - self.topBar.topBarHeight - self.controllerWithTopBarMargin)};
+    _contentView.frame = CGRectMake(0, self.topBar.topBarHeight + self.controllerWithTopBarMargin, HYScreenW, self.layout.itemSize.height);
+    
+}
 - (NSMutableArray *)subViewControllers{
     
     if (!_subViewControllers) {
@@ -103,12 +115,13 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     
     if (!_contentView) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+        self.layout = layout;
         //设置layout 属性
-        layout.itemSize = (CGSize){self.bounds.size.width,(self.bounds.size.height - topBarHeight)};
+        layout.itemSize = (CGSize){self.bounds.size.width,(self.frame.size.height - self.topBar.topBarHeight - self.controllerWithTopBarMargin)};
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         layout.minimumLineSpacing = 0;
         
-        _contentView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, topBarHeight, HYScreenW, HYScreenH - topBarHeight - 64) collectionViewLayout:layout];
+        _contentView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, self.topBar.topBarHeight + self.controllerWithTopBarMargin, HYScreenW, layout.itemSize.height) collectionViewLayout:layout];
         
         _contentView.showsHorizontalScrollIndicator = NO;
         _contentView.pagingEnabled = YES;
