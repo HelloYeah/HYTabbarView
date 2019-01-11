@@ -118,7 +118,22 @@ itemSelectedFont;
 	    if (!_tabbarView) {
 	        _tabbarView = ({
 	            
-	            HYTabbarView * tabbar = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64)];
+	            HYTabbarView *tabbarView = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 120, HYScreenW, HYScreenH - 120 - 44 - 20)];
+		    tabbarView.controllerWithTopBarMargin = 7;
+		    tabbarView.topBar.topBarHeight = 30;
+		    tabbarView.topBar.topBarItemMargin = 22.5;
+		    tabbarView.topBar.indicatorWithItemMargin = 6;
+		    tabbarView.topBar.indicatorBackgroundColor = [UIColor orangeColor];
+		    tabbarView.topBar.indicatorHeight = 3;
+	//            tabbarView.topBar.indicatorWidth = 50;
+		    //    tabbarView.topBar.changeWithItemWidth = YES;
+		    tabbarView.topBar.firstItemX = 15;
+		    tabbarView.topBar.itemNormalColor = [UIColor blackColor];
+		    tabbarView.topBar.itemSelectedColor = [UIColor greenColor];
+		    tabbarView.topBar.itemNormalFont = [UIFont systemFontOfSize:15];
+		    tabbarView.topBar.itemSelectedFont = [UIFont systemFontOfSize:18];
+
+		    [self.view addSubview:tabbarView];
 	            
 	            //传入九个控制器,每个控制器分别管理对应的视图
 	            UIViewController * vc0 = [[UIViewController alloc]init];
