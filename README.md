@@ -14,7 +14,6 @@
 ![1.gif](http://chuantu.biz/t5/30/1471921557x2031068758.gif) 
 #####HYTabbarView可灵活配置UI界面
 
-	/** 标题之间的间距*/
 @property(nonatomic, assign)CGFloat topBarItemMargin;
 
 /** 顶部标签条的高度*/
@@ -24,40 +23,40 @@
 /***********指示条**************/
 
 /** 指示条与标题的距离*/
-@property(nonatomic, assign)CGFloat indicatorWithItemMargin;
+indicatorWithItemMargin;
 
 /** 指示条颜色*/
-@property(nonatomic, strong)UIColor *indicatorBackgroundColor;
+indicatorBackgroundColor;
 
 /** 指示条高度*/
-@property(nonatomic, assign)CGFloat indicatorHeight;
+indicatorHeight;
 
 /** 指示条的宽度是否随标题的宽度变化，默认值为NO*/
-@property(nonatomic, assign)BOOL changeWithItemWidth;
+changeWithItemWidth;
 
 /** 指示条宽度，默认值为30，如果宽度需要随标题的宽度变化，则不需要设置*/
-@property(nonatomic, assign)CGFloat indicatorWidth;
+indicatorWidth;
 
 
 /***************标题*****************/
 
 /** 第一个标题X坐标*/
-@property(nonatomic, assign)CGFloat firstItemX;
+firstItemX;
 
 /** 标题高度*/
-@property(nonatomic, assign)CGFloat itemHeight;
+itemHeight;
 
 /** 标题颜色*/
-@property(nonatomic, strong)UIColor *itemNormalColor;
+itemNormalColor;
 
 /** 标题选中颜色*/
-@property(nonatomic, strong)UIColor *itemSelectedColor;
+itemSelectedColor;
 
 /** 标题字体大小*/
-@property(nonatomic, strong)UIFont *itemNormalFont;
+itemNormalFont;
 
 /** 标题选中字体大小*/
-@property(nonatomic, strong)UIFont *itemSelectedFont;
+itemSelectedFont;
 
 
 ####实现思路详解
