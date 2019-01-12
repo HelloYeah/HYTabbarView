@@ -8,12 +8,14 @@
 
 #import "HYTopBar.h"
 
-static CGFloat const topBarItemMargin = 15; ///标题之间的间距
-static CGFloat const topBarHeight = 40; //顶部标签条的高度
+//static CGFloat const topBarItemMargin = 22.5; ///标题之间的间距
+//static CGFloat const topBarHeight = 18; //顶部标签条的高度
 
 @interface HYTopBar()
 @property (nonatomic,strong) NSMutableArray *btnArray;
 @property (nonatomic,strong) UIButton *selectedBtn;
+/** 滑动的横线*/
+@property(nonatomic, strong)UIView *indicatorView;
 @end
 
 @implementation HYTopBar
@@ -25,6 +27,11 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
         self.bounces = NO;
+        
+        // 滑动条
+        UIView *indicatorView = [[UIView alloc] init];
+        self.indicatorView = indicatorView;
+        [self addSubview:indicatorView];
     }
     return self;
 }
@@ -34,12 +41,14 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn setTitle:title forState:UIControlStateNormal];
     [btn sizeToFit];
-    btn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [btn setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+    btn.titleLabel.font = self.itemNormalFont;
+    [btn setTitleColor:self.itemNormalColor forState:UIControlStateNormal];
+    [btn setTitleColor:self.itemSelectedColor forState:UIControlStateSelected];
     [btn addTarget:self action:@selector(itemSelectedChange:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:btn];
     [self.btnArray addObject:btn];
+    
+    [self layoutIfNeeded];
 }
 
 - (void)itemSelectedChange:(UIButton *)btn {
@@ -53,15 +62,28 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 - (void)setSelectedItem:(NSInteger)index {
     
     UIButton *btn = self.btnArray[index];
+    
+    //    btn.titleLabel.font = self.itemSelectedFont;
     [UIView animateWithDuration:0.25 animations:^{
         
         self.selectedBtn.selected = NO;
-        self.selectedBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        self.selectedBtn.titleLabel.font = self.itemNormalFont;
         
         btn.selected = YES;
-        btn.titleLabel.font = [UIFont systemFontOfSize:18];
+        btn.titleLabel.font = self.itemSelectedFont;
         self.selectedBtn = btn;
-
+        
+        if (self.changeWithItemWidth) {
+            CGRect newFrame = self.indicatorView.frame;
+            newFrame.size.width = btn.frame.size.width;
+            self.indicatorView.frame = newFrame;
+        }
+        
+        
+        CGPoint newCenter = self.indicatorView.center;
+        newCenter.x = btn.center.x;
+        self.indicatorView.center = newCenter;
+        
         // 计算偏移量
         CGFloat offsetX = btn.center.x - HYScreenW * 0.5;
         if (offsetX < 0) offsetX = 0;
@@ -75,7 +97,12 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
         }
     }];
 }
-
+- (void)setTopBarHeight:(CGFloat)topBarHeight{
+    _topBarHeight = topBarHeight;
+    if ([self.topBarDelegate respondsToSelector:@selector(HYTopBarChangeContentViewHeight)]) {
+        [self.topBarDelegate HYTopBarChangeContentViewHeight];
+    }
+}
 - (NSMutableArray *)btnArray{
     
     if (!_btnArray) {
@@ -85,16 +112,40 @@ static CGFloat const topBarHeight = 40; //顶部标签条的高度
 }
 
 - (void)layoutSubviews {
-    
+    NSLog(@"-----layoutSubviews");
     [super layoutSubviews];
-
-    CGFloat btnH = topBarHeight;
-    CGFloat btnX = topBarItemMargin;
+    self.indicatorView.backgroundColor = self.indicatorBackgroundColor;
+    
+    CGRect newFrame = self.indicatorView.frame;
+    newFrame.size.height = self.indicatorHeight;
+    self.indicatorView.frame = newFrame;
+    
+    CGFloat radius = self.indicatorView.frame.size.height * 0.5;
+    self.indicatorView.layer.cornerRadius = radius;
+    
+    if((!self.changeWithItemWidth) && self.indicatorWidth != 0){
+        CGRect newFrame = self.indicatorView.frame;
+        newFrame.size.width = self.indicatorWidth;
+        self.indicatorView.frame = newFrame;
+    }else if(self.indicatorWidth == 0 && !self.changeWithItemWidth){
+        CGRect newFrame = self.indicatorView.frame;
+        newFrame.size.width = 30;
+        self.indicatorView.frame = newFrame;
+    }
+    
+    CGFloat btnX = self.firstItemX;
     for (int i = 0 ; i < self.btnArray.count; i++) {
-
+        
         UIButton *btn = self.btnArray[i];
-        btn.frame = CGRectMake(btnX, 0, btn.frame.size.width, btnH);
-        btnX += btn.frame.size.width + topBarItemMargin;
+        CGRect titileSize = [btn.titleLabel.text boundingRectWithSize:CGSizeMake(100, 100) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.itemSelectedFont} context:nil];
+        
+        btn.frame = CGRectMake(btnX, 0, btn.frame.size.width, titileSize.size.height);
+        btnX += btn.frame.size.width + self.topBarItemMargin;
+        
+        CGRect newFrame = self.indicatorView.frame;
+        newFrame.origin.y = CGRectGetMaxY(btn.frame) + self.indicatorWithItemMargin;
+        self.indicatorView.frame = newFrame;
+        
     }
     self.contentSize = CGSizeMake(btnX, 0);
 }

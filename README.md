@@ -14,8 +14,50 @@
 ![1.gif](http://chuantu.biz/t5/30/1471921557x2031068758.gif) 
 #####HYTabbarView可灵活配置UI界面
 
-	static CGFloat const topBarItemMargin = 15; ///标题之间的间距
-	static CGFloat const topBarHeight = 40; //顶部标签条的高度
+@property(nonatomic, assign)CGFloat topBarItemMargin;
+
+/** 顶部标签条的高度*/
+@property(nonatomic, assign)CGFloat topBarHeight;
+
+
+/***********指示条**************/
+
+/** 指示条与标题的距离*/
+indicatorWithItemMargin;
+
+/** 指示条颜色*/
+indicatorBackgroundColor;
+
+/** 指示条高度*/
+indicatorHeight;
+
+/** 指示条的宽度是否随标题的宽度变化，默认值为NO*/
+changeWithItemWidth;
+
+/** 指示条宽度，默认值为30，如果宽度需要随标题的宽度变化，则不需要设置*/
+indicatorWidth;
+
+
+/***************标题*****************/
+
+/** 第一个标题X坐标*/
+firstItemX;
+
+/** 标题高度*/
+itemHeight;
+
+/** 标题颜色*/
+itemNormalColor;
+
+/** 标题选中颜色*/
+itemSelectedColor;
+
+/** 标题字体大小*/
+itemNormalFont;
+
+/** 标题选中字体大小*/
+itemSelectedFont;
+
 
 ####实现思路详解
 - 界面分析:分为上下部分,顶部UIScrollView,底部UICollectionView.再实现两部分的联动即可实现 (底部视图相对复杂,占用内存大,底部用UICollectionView实现会比用UIScrollView性能好很多)
@@ -76,7 +118,22 @@
 	    if (!_tabbarView) {
 	        _tabbarView = ({
 	            
-	            HYTabbarView * tabbar = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64)];
+	            HYTabbarView *tabbarView = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 120, HYScreenW, HYScreenH - 120 - 44 - 20)];
+		    tabbarView.controllerWithTopBarMargin = 7;
+		    tabbarView.topBar.topBarHeight = 30;
+		    tabbarView.topBar.topBarItemMargin = 22.5;
+		    tabbarView.topBar.indicatorWithItemMargin = 6;
+		    tabbarView.topBar.indicatorBackgroundColor = [UIColor orangeColor];
+		    tabbarView.topBar.indicatorHeight = 3;
+	//            tabbarView.topBar.indicatorWidth = 50;
+		    //    tabbarView.topBar.changeWithItemWidth = YES;
+		    tabbarView.topBar.firstItemX = 15;
+		    tabbarView.topBar.itemNormalColor = [UIColor blackColor];
+		    tabbarView.topBar.itemSelectedColor = [UIColor greenColor];
+		    tabbarView.topBar.itemNormalFont = [UIFont systemFontOfSize:15];
+		    tabbarView.topBar.itemSelectedFont = [UIFont systemFontOfSize:18];
+
+		    [self.view addSubview:tabbarView];
 	            
 	            //传入九个控制器,每个控制器分别管理对应的视图
 	            UIViewController * vc0 = [[UIViewController alloc]init];

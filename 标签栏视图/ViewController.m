@@ -41,45 +41,61 @@
     if (!_tabbarView) {
         _tabbarView = ({
             
-            HYTabbarView * tabbar = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64)];
+            HYTabbarView *tabbarView = [[HYTabbarView alloc]initWithFrame:CGRectMake(0, 120, HYScreenW, HYScreenH - 120 - 44 - 20)];
+            tabbarView.controllerWithTopBarMargin = 7;
+            tabbarView.topBar.topBarHeight = 30;
+            tabbarView.topBar.topBarItemMargin = 22.5;
+            tabbarView.topBar.indicatorWithItemMargin = 6;
+            tabbarView.topBar.indicatorBackgroundColor = [UIColor orangeColor];
+            tabbarView.topBar.indicatorHeight = 3;
+//            tabbarView.topBar.indicatorWidth = 50;
+            //    tabbarView.topBar.changeWithItemWidth = YES;
+            tabbarView.topBar.firstItemX = 15;
+            tabbarView.topBar.itemNormalColor = [UIColor blackColor];
+            tabbarView.topBar.itemSelectedColor = [UIColor greenColor];
+            tabbarView.topBar.itemNormalFont = [UIFont systemFontOfSize:15];
+            tabbarView.topBar.itemSelectedFont = [UIFont systemFontOfSize:18];
+            
+            [self.view addSubview:tabbarView];
+            
             
             TestViewController * vc0 = [[TestViewController alloc]init];
             vc0.title = @"推荐";
-            [tabbar addSubItemWithViewController:vc0];
+            [tabbarView addSubItemWithViewController:vc0];
             
             TestViewController * vc1 = [[TestViewController alloc]init];
             vc1.title = @"热点";
-            [tabbar addSubItemWithViewController:vc1];
+            [tabbarView addSubItemWithViewController:vc1];
             
             TestViewController * vc2 = [[TestViewController alloc]init];
             vc2.title = @"视频";
-            [tabbar addSubItemWithViewController:vc2];
+            [tabbarView addSubItemWithViewController:vc2];
             
             TestViewController * vc3 = [[TestViewController alloc]init];
             vc3.title = @"中国好声音";
-            [tabbar addSubItemWithViewController:vc3];
+            [tabbarView addSubItemWithViewController:vc3];
 
             TestViewController * vc4 = [[TestViewController alloc]init];
             vc4.title = @"数码";
-            [tabbar addSubItemWithViewController:vc4];
+            [tabbarView addSubItemWithViewController:vc4];
             
             TestViewController * vc5 = [[TestViewController alloc]init];
             vc5.title = @"头条号";
-            [tabbar addSubItemWithViewController:vc5];
+            [tabbarView addSubItemWithViewController:vc5];
             
             TestViewController * vc6 = [[TestViewController alloc]init];
             vc6.title = @"房产";
-            [tabbar addSubItemWithViewController:vc6];
+            [tabbarView addSubItemWithViewController:vc6];
             
             TestViewController * vc7 = [[TestViewController alloc]init];
             vc7.title = @"奥运会";
-            [tabbar addSubItemWithViewController:vc7];
+            [tabbarView addSubItemWithViewController:vc7];
             
             TestViewController * vc8 = [[TestViewController alloc]init];
             vc8.title = @"时尚";
-            [tabbar addSubItemWithViewController:vc8];
+            [tabbarView addSubItemWithViewController:vc8];
             
-            tabbar;
+            tabbarView;
         });
     }
     return _tabbarView;
